@@ -7,10 +7,10 @@
 #ifndef dnsrpc_TYPES_H
 #define dnsrpc_TYPES_H
 
-#include <thrift/Thrift.h>
-#include <thrift/TApplicationException.h>
-#include <thrift/protocol/TProtocol.h>
-#include <thrift/transport/TTransport.h>
+#include "thrift/Thrift.h"
+#include "thrift/TApplicationException.h"
+#include "thrift/protocol/TProtocol.h"
+#include "thrift/transport/TTransport.h"
 
 
 
@@ -3148,13 +3148,20 @@ class HeartBeatState {
   virtual ~HeartBeatState() throw() {}
 
   ModuleState::type mState;
+  //bool serverState; // myadd
 
   _HeartBeatState__isset __isset;
 
   void __set_mState(const ModuleState::type val) {
     mState = val;
+  
   }
-
+/*
+  void __set_serverState(const bool val) //myadd
+  {
+	serverState = val;
+  }
+*/
   bool operator == (const HeartBeatState & rhs) const
   {
     if (!(mState == rhs.mState))

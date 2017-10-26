@@ -7,7 +7,7 @@
 #ifndef Agent_H
 #define Agent_H
 
-#include <thrift/TDispatchProcessor.h>
+#include "thrift/TDispatchProcessor.h"
 #include "dnsrpc_types.h"
 
 namespace rpc { namespace yamutech { namespace com {

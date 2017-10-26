@@ -21,12 +21,12 @@ log_printf(int level,int type,const char *logfile,const char * fmt,...)
     	int 			size;
 	va_list 		args;
 	unsigned char	filename[128] = {0};
-
+/*
 	if(LOG_RUN == type) {
 		if(!s_debug_switch || g_cfg.log_level < level)
 			return 0;
 	}
-
+*/
 	memset(buf, 0, MAX_DEBUG_BUFFER_LEN);
 
 	va_start(args, fmt);
@@ -98,6 +98,7 @@ write_debug_file(unsigned char			*filename,
 		st_tm.tm_sec);
 
 	// 写入到文件中
+	//printf("[%s] %s\n",log_time,buffer);	
 	fwrite((char *)log_time, strlen((char *)log_time), 1, fp) ;
 	fwrite((char *)buffer, strlen((char *)buffer), 1, fp) ;
 

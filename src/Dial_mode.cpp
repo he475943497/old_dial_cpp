@@ -644,7 +644,7 @@ handle_db_dialing(char *ip,char *url,char *db_cmd)
 	char usr[50] = {0};
 	char pwd[50] = {0};
 	int port = 0;
-	int rtn;
+	int rtn = 0;
 	MYSQL *conn;
 
 	if(NULL == ip || NULL == url || NULL == db_cmd) {
@@ -673,7 +673,7 @@ handle_db_dialing(char *ip,char *url,char *db_cmd)
 	mysql_close(conn);
 
 EXIT:	
-	if(NO_ERROR== rtn)
+	if(NO_ERROR == rtn)
 		debug_printf(LOG_LEVEL_DEBUG,"handle_db_dialing:success!!!host=%s,usr=%s,pwd=%s,db_name=%s,port=%d\n",host,usr,pwd,db_name,port);
 	else
 		debug_printf(LOG_LEVEL_DEBUG,"handle_db_dialing:failed!!!host=%s,usr=%s,pwd=%s,db_name=%s,port=%d\n",host,usr,pwd,db_name,port);

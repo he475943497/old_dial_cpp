@@ -221,6 +221,12 @@ class DialHandler : virtual public DialIf {
 
 };
 
+#define	HASH_POLICY_NUM	100
+#define	HASH_NGINX_NUM	500
+#define	HASH_GROUP_NUM	1000
+#define	THREAD_POOL_NUM	20
+#define 	HTTPGET_PORT 		80
+#define	CONFIG_FILE	"/etc/dial_config"
 
 void
 do_a_dial_healthgroup(healthgroup_info_t *hg);
@@ -245,6 +251,35 @@ sys_log_timer_init();
 
 int
 signal_init();
+
+int
+set_core_file();
+
+void *
+start_register_thread(void *arg);
+
+void *
+dial_monitor_thread(void *arg);
+
+void *
+dial_monitor_thread2(void *arg);
+
+void *
+dial_monitor_thread3(void *arg);
+
+void *
+dial_monitor_queue_thread(void *arg);
+
+int
+sys_init();
+
+int
+sys_free();
+
+void
+thrift_init(int port);
+
+
 
 
 

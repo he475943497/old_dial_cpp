@@ -2,11 +2,11 @@
 // You should copy it to another filename to avoid overwriting it.
 
 #include "Dial.h"
-#include <thrift/protocol/TBinaryProtocol.h>
-#include <thrift/server/TSimpleServer.h>
-#include <thrift/transport/TServerSocket.h>
-#include <thrift/transport/TBufferTransports.h>
-#include <thrift/transport/TSocket.h>
+#include "thrift/protocol/TBinaryProtocol.h"
+#include "thrift/server/TSimpleServer.h"
+#include "thrift/transport/TServerSocket.h"
+#include "thrift/transport/TBufferTransports.h"
+#include "thrift/transport/TSocket.h"
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -45,14 +45,14 @@ using boost::shared_ptr;
 
 //#define ERROR 	-1
 //#define NO_ERROR 		0
-
+/*
 #define	HASH_POLICY_NUM	100
 #define	HASH_NGINX_NUM	500
 #define	HASH_GROUP_NUM	1000
 #define	THREAD_POOL_NUM	20
 #define 	HTTPGET_PORT 		80
 #define	CONFIG_FILE	"/etc/dial_config"
-
+*/
 hash_info_t 		hs_health_policy;
 hash_info_t 		hs_health_group;
 hash_info_t 		hs_nginx_group;
@@ -1138,6 +1138,7 @@ RetCode::type send_update_health_status(const HealthGroupInfo& health, const std
 		//AgentClient client(tprotocol);
 
 	  	rtn = client.updateHealthStatus(health,statusList,policyName);
+		cfg_debug_printf(LOG_LEVEL_BASIC,"*****************client.updateHealthStatus rtn = %d ***********\n",rtn);
 	}catch(std::exception &e) {
 		client_connecting_flag = false;
 		transport_client->close(); 
@@ -1171,6 +1172,7 @@ RetCode::type send_update_server_status(const DialServerStatus& status, const Di
 		//AgentClient client(tprotocol);
 
 	  	rtn = client.updateServerStatus(status,typ);
+		cfg_debug_printf(LOG_LEVEL_BASIC,"*****************client.updateServerStatus rtn = %d ***********\n",rtn);
 	}catch(std::exception &e) {
 		client_connecting_flag = false;
 		transport_client->close(); 
@@ -1204,6 +1206,7 @@ RetCode::type send_update_nginx_status(const std::string& groupName, const std::
 		//AgentClient client(tprotocol);
 
 	  	rtn = client.updateNginxStatus(groupName,statusList,policyName);
+		cfg_debug_printf(LOG_LEVEL_BASIC,"*****************client.updateNginxStatus rtn = %d ***********\n",rtn);
 	}catch(std::exception &e) {
 		client_connecting_flag = false;
 		transport_client->close(); 
@@ -2021,11 +2024,11 @@ dial_monitor_thread(void *arg)
 					//if(TIME_CMPARE(&t_now,&hg->t_insert) > 0) {
 					if(((t_now.tv_sec * 1000*1000 + t_now.tv_usec) - (policy->t_insert.tv_sec * 1000*1000 + policy->t_insert.tv_usec)) >= 0) {
 						add_task_to_queue_buffer(hg,policy->pPolicy);
-						debug_printf(LOG_LEVEL_DEBUG,"add a task!!!!!!\n");
+						/*debug_printf(LOG_LEVEL_DEBUG,"add a task!!!!!!\n");
 						if(tp.threads_used < tp.act_threads_num) 
 						{
 							pthread_cond_signal(&tp.cond);
-						}
+						}*/
 						policy->t_insert = t_now;
 						policy->t_insert.tv_sec += policy->pPolicy->freq;					
 					}
@@ -2071,11 +2074,11 @@ dial_monitor_thread2(void *arg)
 				gettimeofday(&t_now,NULL);	
 				if(((t_now.tv_sec * 1000*1000 + t_now.tv_usec) - (srv_node->t_insert.tv_sec * 1000*1000 + srv_node->t_insert.tv_usec)) >= 0) {
 					add_task_to_queue_buffer_2(srv_node);
-					debug_printf(LOG_LEVEL_ERROR,"dial_monitor_thread2:add a task!!!!!!\n");
+					/*debug_printf(LOG_LEVEL_ERROR,"dial_monitor_thread2:add a task!!!!!!\n");
 					if(tp.threads_used < tp.act_threads_num) 
 					{
 						pthread_cond_signal(&tp.cond);
-					}
+					}*/
 					srv_node->t_insert = t_now;
 					srv_node->t_insert.tv_sec += g_cfg.srv_cfg.interval;					
 				}				
@@ -2126,11 +2129,11 @@ dial_monitor_thread3(void *arg)
 					//if(TIME_CMPARE(&t_now,&hg->t_insert) > 0) {
 					if(((t_now.tv_sec * 1000*1000 + t_now.tv_usec) - (policy->t_insert.tv_sec * 1000*1000 + policy->t_insert.tv_usec)) >= 0) {
 						add_task_to_queue_buffer3(ng,policy->pPolicy);
-						debug_printf(LOG_LEVEL_DEBUG,"dial_monitor_thread3:add a task!!!!!!\n");
+						/*debug_printf(LOG_LEVEL_DEBUG,"dial_monitor_thread3:add a task!!!!!!\n");
 						if(tp.threads_used < tp.act_threads_num) 
 						{
 							pthread_cond_signal(&tp.cond);
-						}
+						}*/
 						policy->t_insert = t_now;
 						policy->t_insert.tv_sec += policy->pPolicy->freq;					
 					}
@@ -2145,6 +2148,21 @@ dial_monitor_thread3(void *arg)
 }
 
 
+void *
+dial_monitor_queue_thread(void *arg)
+{	
+	while(thread_exit_flag) 
+	{
+		if(tp.threads_used < tp.act_threads_num && queue_info.cnt > 0) 
+		{
+			pthread_cond_signal(&tp.cond);
+		}
+		else
+		{
+			sleep(1);
+		}	
+	}
+}
 
 
 
@@ -2295,7 +2313,7 @@ sys_log_timer_init()
 
 	return NO_ERROR;	   
 }
-
+/*
 int main(int argc, char **argv) 
 {
 	int rtn = NO_ERROR;
@@ -2402,4 +2420,4 @@ int main(int argc, char **argv)
 	
 	return NO_ERROR;
 }
-
+*/

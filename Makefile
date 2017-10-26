@@ -1,8 +1,14 @@
 TGT=edns_dial
 SRCS=$(wildcard ./src/*.cpp)
 
-LIBRAYS= -levent -lrt -pthread -lssl -lcrypto -ldl -lz ./lib/*.a
-COMPILE_FLAGS= -g -W  -O2 -DHAVE_NETINET_IN_H -I. -I./include -I./clib/include -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include/ -I/usr/include/openssl 
+LIBRAYS= -lrt -lpthread -ldl -lz -lcrypto -lssl ./lib/*.a
+#LIBRAYS= -lrt -lpthread -ldl -lz ./lib/*.a
+#LIBRAYS= ./lib/*.a -ldl -lz -static -lrt -lpthread 
+#LIBRAYS= -lrt -pthread -lssl -lcrypto -ldl -lz ./lib/*.a ./lib/base_lib/libevent.a
+#LIBRAYS= -lrt -pthread ./lib/base_lib/*.a -ldl -lz ./lib/*.a 
+
+COMPILE_FLAGS= -g -W -O2 -DHAVE_NETINET_IN_H -I./include -I./clib/include -I/usr/include/openssl 
+#COMPILE_FLAGS= -g -W -O2 -DHAVE_NETINET_IN_H -I./include -I./clib/include -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include/ -I/usr/include/openssl 
 
 CC=g++
 
